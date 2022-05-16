@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, request
 import requests
 from flask_cors import CORS
 import boto3
@@ -23,7 +23,10 @@ def index():
 @app.route('/getTag', methods=['GET'])
 @app.route('/getTag/', methods=['GET'])
 def get_tag():
+    tag = request.args.get('tag')
+
     instance_id = (requests.get("http://169.254.169.254/latest/meta-data/instance-id")).text
+
 
     ec2 = boto3.resource('ec2', region_name="us-east-1")
     ec2instance = ec2.Instance(instance_id)
@@ -33,7 +36,7 @@ def get_tag():
 
     for tags in ec2instance.tags:
         print(tags)
-        if "categoria" in tags['Key']:
+        if tag in tags['Key']:
             server = {"name": tags['Value'], "host": host}
             found = True
             break
