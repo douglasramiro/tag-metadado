@@ -24,10 +24,7 @@ def index():
 @app.route('/getTag/', methods=['GET'])
 def get_tag():
     tag = request.args.get('tag')
-
     instance_id = (requests.get("http://169.254.169.254/latest/meta-data/instance-id")).text
-
-
     ec2 = boto3.resource('ec2', region_name="us-east-1")
     ec2instance = ec2.Instance(instance_id)
     host = socket.gethostname();
